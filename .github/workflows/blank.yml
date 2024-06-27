@@ -1,0 +1,41 @@
+name: 'Terraform'
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  terraform:
+    name: 'Terraform'
+    runs-on: ubuntu-latest
+    environment: production
+
+    # Use the Bash shell regardless of runner OS
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Install the latest version of Terraform CLI (optional, might be installed by runner)
+
+      # Setup Terraform not required with Terragrunt
+
+      - name: Terragrunt Init
+        run: terragrunt init
+
+      - name: Terragrunt Format (check)
+        run: terragrunt fmt -check
+
+      - name: Terragrunt Plan
+        run: terragrunt plan -input=false
+
+      - name: Terragrunt Apply (on push to main)
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: terragrunt apply -auto-approve -input=false
