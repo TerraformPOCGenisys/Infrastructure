@@ -10,7 +10,7 @@ variable "resource_tags" {
     # "Owner" : "cultus"
     # "Sensitivity" : "yes"
     # "Managed By"  = "Terraform"
-  
+
   }
 }
 
@@ -21,11 +21,11 @@ variable "namespace" {
   default = "ogm"
 }
 variable "aws_eks_cluster" {
-  
+
 }
-variable "profile" {
-  
-}
+# variable "profile" {
+
+# }
 
 variable "aws_region" {
   description = "AWS aws_region to launch the environment"
