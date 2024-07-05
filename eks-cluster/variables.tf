@@ -70,4 +70,6 @@ variable "data_vpc_state_dynamodb_table" {
 variable "data_vpc_state_profile" {
 }
 
-
+variable "eks_managed_node_groups" {
+  description = "EKS Managed Node Groups"
+}

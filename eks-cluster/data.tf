@@ -22,3 +22,4 @@ data "terraform_remote_state" "vpc_state" {
   }
 }
 
+data "aws_caller_identity" "current" {}
