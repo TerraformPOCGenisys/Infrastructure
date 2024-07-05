@@ -19,7 +19,8 @@ env:
 jobs:
   terraform_aws_vpc:
     name: 'VPC Deployment'
-    runs-on: genisysdockerhub/terraform
+    runs-on: ubuntu-latest
+    container: genisysdockerhub/terraform
 
     defaults:
       run:
@@ -47,7 +48,8 @@ jobs:
   terraform_aws_ecr:
     name: 'ECR Deployment'
     needs: terraform_aws_vpc
-    runs-on: genisysdockerhub/terraform
+    runs-on: ubuntu-latest
+    container: genisysdockerhub/terraform
 
     defaults:
       run:
@@ -78,7 +80,8 @@ jobs:
   terraform_aws_eks_rds:
     name: 'RDS Deployment'
     needs: terraform_aws_ecr
-    runs-on: genisysdockerhub/terraform
+    runs-on: ubuntu-latest
+    container: genisysdockerhub/terraform
 
     defaults:
       run:
@@ -107,7 +110,8 @@ jobs:
   terraform_aws_eks_cluster:
     name: 'AWS Cluster & NodeGroup Deployment'
     needs: terraform_aws_eks_rds
-    runs-on: genisysdockerhub/terraform
+    runs-on: ubuntu-latest
+    container: genisysdockerhub/terraform
 
     defaults:
       run:
@@ -135,7 +139,8 @@ jobs:
   terraform_aws_eks_addon:
     name: 'AWS EKS Cluster Addon Deployment'
     needs: terraform_aws_eks_cluster
-    runs-on: genisysdockerhub/terraform
+    runs-on: ubuntu-latest
+    container: genisysdockerhub/terraform
 
     defaults:
       run:
@@ -163,7 +168,8 @@ jobs:
   terraform_aws_eks_argocd:
     name: 'AWS ArgoCD Deployment'
     needs: terraform_aws_eks_addon
-    runs-on: genisysdockerhub/terraform
+    runs-on: ubuntu-latest
+    container: genisysdockerhub/terraform
 
     defaults:
       run:
