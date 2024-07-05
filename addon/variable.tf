@@ -7,9 +7,9 @@ variable "aws_region" {
 # variable "vpc_id" {
 
 # }
-variable "profile" {
+# variable "profile" {
 
-}
+# }
 
 # variable "aws_secret_manager_name" {
 
@@ -48,10 +48,10 @@ variable "data_cluster_state_region" {
   type        = string
 }
 
-variable "data_cluster_state_profile" {
-  description = "AWS profile for remote state storage"
-  type        = string
-}
+# variable "data_cluster_state_profile" {
+#   description = "AWS profile for remote state storage"
+#   type        = string
+# }
 
 variable "data_cluster_state_bucket" {
   description = "s3 bucket"
@@ -74,10 +74,10 @@ variable "data_vpc_state_region" {
   type        = string
 }
 
-variable "data_vpc_state_profile" {
-  description = "AWS profile for remote state storage"
-  type        = string
-}
+# variable "data_vpc_state_profile" {
+#   description = "AWS profile for remote state storage"
+#   type        = string
+# }
 
 variable "data_vpc_state_bucket" {
   description = "s3 bucket"

@@ -11,5 +11,5 @@ resource_tags = {
   "Sensitivity" : "yes"
   "Managed By" = "Terraform"
 }
-profile    = "default"
+# profile    = "default"
 aws_region = "ap-south-1"

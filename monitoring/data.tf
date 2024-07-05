@@ -15,7 +15,7 @@ data "terraform_remote_state" "addon" {
     bucket         = var.data_addon_state_bucket 
     key            = var. data_addon_state_bucket_key 
     region         = var.data_addon_state_region 
-    profile        = var.data_addon_state_profile 
+    # profile        = var.data_addon_state_profile 
     dynamodb_table = var.data_addon_state_dynamodb
   }
 }
@@ -25,7 +25,7 @@ data "terraform_remote_state" "cluster" {
     bucket         = var.data_cluster_state_bucket 
     key            = var. data_cluster_state_bucket_key 
     region         = var.data_cluster_state_region 
-    profile        = var.data_cluster_state_profile 
+    # profile        = var.data_cluster_state_profile 
     dynamodb_table = var.data_cluster_state_dynamodb
   }
 }
@@ -35,7 +35,7 @@ data "terraform_remote_state" "vpc_state" {
     bucket         =  var.data_vpc_state_bucket
     key            = var.data_vpc_state_bucket_key
     region         = var.data_vpc_state_region
-    profile        = var.data_vpc_state_profile
+    # profile        = var.data_vpc_state_profile
     dynamodb_table = var.data_vpc_state_dynamodb
   }
 }

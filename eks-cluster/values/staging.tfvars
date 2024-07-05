@@ -3,7 +3,7 @@ namespace       = "poc"
 region          = "ap-south-1"
 aws_eks_cluster = "eks-stag-poc"
 //fargate_profiles = {}
-profile = "default"
+# profile = "default"
 user    = "arn:aws:iam::352730764496:user/terraform-user"
 resource_tags = {
   "Created By" : "Genisys-POC"

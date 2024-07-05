@@ -11,9 +11,9 @@ variable "grafana_version" {
 variable "eks_cluster_name" {
   
 }
-variable "profile" {
+# variable "profile" {
   
-}
+# }
 variable "env" {
   
 }

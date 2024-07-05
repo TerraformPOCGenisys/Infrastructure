@@ -44,9 +44,9 @@ variable "environment" {
   description = "EKS Managed Node Groups"
 } 
 */
-variable "profile" {
-  description = ""
-}
+# variable "profile" {
+#   description = ""
+# }
 /*variable "vpc_id" {
   description = "vpc id"
 }
@@ -67,8 +67,8 @@ variable "data_vpc_state_region" {
 }
 variable "data_vpc_state_dynamodb_table" {
 }
-variable "data_vpc_state_profile" {
-}
+# variable "data_vpc_state_profile" {
+# }
 
 variable "eks_managed_node_groups" {
   description = "EKS Managed Node Groups"

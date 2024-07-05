@@ -1,6 +1,6 @@
-variable "profile" {
+# variable "profile" {
 
-}
+# }
 variable "aws_region" {
 
 }

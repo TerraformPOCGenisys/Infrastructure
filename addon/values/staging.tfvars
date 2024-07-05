@@ -2,7 +2,7 @@ aws_eks_cluster = "eks-stag-poc"
 aws_region      = "ap-south-1"
 namespace       = "staging"
 env             = "staging"
-profile         = "default"
+# profile         = "default"
 
 ######backend config for EKS cluster######
 data_cluster_state_bucket     = "terraformstatebucketcm"

@@ -10,9 +10,9 @@ variable "img_tag" {
 variable "resource_tags" {
   type = any
 }
-variable "profile" {
-  type = any
-}
+# variable "profile" {
+#   type = any
+# }
 variable "aws_region" {
   type = any
 }

@@ -98,7 +98,7 @@ resource "null_resource" "kubectl_patch" {
   ]
   provisioner "local-exec" {
     command = <<-EOT
-      aws eks --region ${var.aws_region} update-kubeconfig --name ${var.eks_cluster_name} --profile ${var.profile} && kubectl -n "argocd" patch deployment argocd-server --type json -p='[ { "op": "replace", "path":"/spec/template/spec/containers/0/command","value": ["argocd-server","--staticassets","/shared/app","--insecure"] }]'
+      aws eks --region ${var.aws_region} update-kubeconfig --name ${var.eks_cluster_name}  && kubectl -n "argocd" patch deployment argocd-server --type json -p='[ { "op": "replace", "path":"/spec/template/spec/containers/0/command","value": ["argocd-server","--staticassets","/shared/app","--insecure"] }]'
     EOT
   }
 }
@@ -135,7 +135,7 @@ resource "helm_release" "argocd_imageupdater_helm" {
       scripts: 
         auth1.sh: |
           #!/bin/sh
-          aws ecr --region ${var.aws_region} --profile ${var.profile} get-authorization-token --output text --query 'authorizationData[].authorizationToken' | base64 -d
+          aws ecr --region ${var.aws_region}  get-authorization-token --output text --query 'authorizationData[].authorizationToken' | base64 -d
 
     serviceAccount:
       create: false

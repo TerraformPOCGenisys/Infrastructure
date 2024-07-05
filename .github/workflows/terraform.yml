@@ -70,9 +70,9 @@ jobs:
       run: terraform init --backend-config="./backend/staging.tfvars" --reconfigure
       working-directory: ${{ env.ECR_WORKDIR }}
 
-    # - name: ECR Terraform Apply
-    #   run: terraform apply --var-file="values/staging.tfvars" --auto-approve
-    #   working-directory: ${{ env.ECR_WORKDIR }}
+    - name: ECR Terraform Apply
+      run: terraform plan --var-file="values/staging.tfvars" # --auto-approve
+      working-directory: ${{ env.ECR_WORKDIR }}
   
 
 ####rds
@@ -102,9 +102,9 @@ jobs:
       run: terraform init --backend-config="./backend/staging.tfvars" --reconfigure
       working-directory: ${{ env.RDS_WORKDIR }}
 
-    # - name: RDS Terraform Apply
-    #   run: terraform apply --var-file="values/staging.tfvars" --auto-approve
-    #   working-directory: ${{ env.RDS_WORKDIR }}    
+    - name: RDS Terraform Apply
+      run: terraform plan --var-file="values/staging.tfvars" # --auto-approve
+      working-directory: ${{ env.RDS_WORKDIR }}    
 
 
   terraform_aws_eks_cluster:
@@ -132,9 +132,9 @@ jobs:
       run: terraform init --backend-config="./backend/staging.tfvars" --reconfigure
       working-directory: ${{ env.EKS_CLUSTER_WORKDIR }}
 
-    # - name: EKS Cluster Terraform Apply
-    #   run: terraform apply --var-file="values/staging.tfvars" --auto-approve
-    #   working-directory: ${{ env.EKS_CLUSTER_WORKDIR }}
+    - name: EKS Cluster Terraform Apply
+      run: terraform plan --var-file="values/staging.tfvars" # --auto-approve
+      working-directory: ${{ env.EKS_CLUSTER_WORKDIR }}
 
   terraform_aws_eks_addon:
     name: 'AWS EKS Cluster Addon Deployment'
@@ -161,9 +161,9 @@ jobs:
       run: terraform init --backend-config="./backend/staging.tfvars" --reconfigure
       working-directory: ${{ env.ADDON_WORKDIR }}
 
-    # - name: EKS Cluster Addon Terraform Apply
-    #   run: terraform apply --var-file="values/staging.tfvars" --auto-approve
-    #   working-directory: ${{ env.ADDON_WORKDIR }}
+    - name: EKS Cluster Addon Terraform Apply
+      run: terraform plan --var-file="values/staging.tfvars" # --auto-approve
+      working-directory: ${{ env.ADDON_WORKDIR }}
    
   terraform_aws_eks_argocd:
     name: 'AWS ArgoCD Deployment'
@@ -190,9 +190,9 @@ jobs:
       run: terraform init --backend-config="./backend/staging.tfvars" --reconfigure
       working-directory: ${{ env.ARGOCD_WORKDIR }}
 
-    # - name: ArgoCD Terraform Apply
-    #   run: terraform apply --var-file="values/staging.tfvars" --auto-approve
-    #   working-directory: ${{ env.ARGOCD_WORKDIR }}    
+    - name: ArgoCD Terraform Apply
+      run: terraform plan --var-file="values/staging.tfvars" # --auto-approve
+      working-directory: ${{ env.ARGOCD_WORKDIR }}    
 
 
 
@@ -221,8 +221,8 @@ jobs:
       run: terraform init --backend-config="./backend/staging.tfvars" --reconfigure
       working-directory: ${{ env.MONITORING_WORKDIR }}
 
-    # - name: Monitoring Terraform Apply
-    #   run: terraform apply --var-file="values/staging.tfvars" --auto-approve
-    #   working-directory: ${{ env.MONITORING_WORKDIR }}    
+    - name: Monitoring Terraform Apply
+      run: terraform plan --var-file="values/staging.tfvars" # --auto-approve
+      working-directory: ${{ env.MONITORING_WORKDIR }}    
 
 

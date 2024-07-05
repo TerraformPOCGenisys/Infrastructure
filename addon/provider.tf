@@ -1,8 +1,8 @@
 
-provider "aws" {
-  region  = var.aws_region
-  profile = var.profile
-}
+# provider "aws" {
+#   region  = var.aws_region
+#   profile = var.profile
+# }
 
 provider "kubernetes" {
   host                   = data.aws_eks_cluster.cluster.endpoint

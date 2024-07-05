@@ -67,11 +67,11 @@ variable "env_name" {
 
 
 
-variable "profile" {
-  type        = string
-  default     = "default"
-  description = "Name of AWS profile"
-}
+# variable "profile" {
+#   type        = string
+#   default     = "default"
+#   description = "Name of AWS profile"
+# }
 
 
 
@@ -98,10 +98,10 @@ variable "data_cluster_state_region" {
   type        = string
 }
 
-variable "data_cluster_state_profile" {
-  description = "AWS profile for remote state storage"
-  type        = string
-}
+# variable "data_cluster_state_profile" {
+#   description = "AWS profile for remote state storage"
+#   type        = string
+# }
 
 variable "data_cluster_state_bucket" {
   description = "s3 bucket"
@@ -119,10 +119,10 @@ variable "data_vpc_state_region" {
   type        = string
 }
 
-variable "data_vpc_state_profile" {
-  description = "AWS profile for remote state storage"
-  type        = string
-}
+# variable "data_vpc_state_profile" {
+#   description = "AWS profile for remote state storage"
+#   type        = string
+# }
 
 variable "data_vpc_state_bucket" {
   description = "s3 bucket"
@@ -140,10 +140,10 @@ variable "data_addon_state_region" {
   type        = string
 }
 
-variable "data_addon_state_profile" {
-  description = "AWS profile for remote state storage"
-  type        = string
-}
+# variable "data_addon_state_profile" {
+#   description = "AWS profile for remote state storage"
+#   type        = string
+# }
 
 variable "data_addon_state_bucket" {
   description = "s3 bucket"
