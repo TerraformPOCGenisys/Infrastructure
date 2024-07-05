@@ -8,7 +8,7 @@ on:
 env:
   VPC_WORKDIR: vpc
   ECR_WORKDIR: ecr
-  RDS: rds
+  RDS_WORKDIR: rds
   EKS_CLUSTER_WORKDIR: eks-cluster
   ADDON_WORKDIR: addon
   ARGOCD_WORKDIR: argocd
