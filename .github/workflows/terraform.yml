@@ -38,12 +38,12 @@ jobs:
         aws-region: ${{ secrets.AWS_REGION }}
 
     - name: VPC Terraform Init
-      run: apt-get install git -y && terraform init --backend-config="./backend/staging.tfvars" --reconfigure
+      run:  terraform init --backend-config="./backend/staging.tfvars" --reconfigure
       working-directory: ${{ env.VPC_WORKDIR }}
 
-    # - name: VPC Terraform Apply
-    #   run: terraform apply --var-file="values/staging.tfvars" --auto-approve
-    #   working-directory: ${{ env.VPC_WORKDIR }}
+    - name: VPC Terraform Apply
+      run: terraform plan --var-file="values/staging.tfvars" --auto-approve
+      working-directory: ${{ env.VPC_WORKDIR }}
   
   terraform_aws_ecr:
     name: 'ECR Deployment'
