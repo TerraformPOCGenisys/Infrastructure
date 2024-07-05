@@ -1,49 +1,5 @@
-# This workflow installs the latest version of Terraform CLI and configures the Terraform CLI configuration file
-# with an API token for Terraform Cloud (app.terraform.io). On pull request events, this workflow will run
-# `terraform init`, `terraform fmt`, and `terraform plan` (speculative plan via Terraform Cloud). On push events
-# to the "main" branch, `terraform apply` will be executed.
-#
-# Documentation for `hashicorp/setup-terraform` is located here: https://github.com/hashicorp/setup-terraform
-#
-# To use this workflow, you will need to complete the following setup steps.
-#
-# 1. Create a `main.tf` file in the root of this repository with the `remote` backend and one or more resources defined.
-#   Example `main.tf`:
-#     # The configuration for the `remote` backend.
-#     terraform {
-#       backend "remote" {
-#         # The name of your Terraform Cloud organization.
-#         organization = "example-organization"
-#
-#         # The name of the Terraform Cloud workspace to store Terraform state files in.
-#         workspaces {
-#           name = "example-workspace"
-#         }
-#       }
-#     }
-#
-#     # An example resource that does nothing.
-#     resource "null_resource" "example" {
-#       triggers = {
-#         value = "A example resource that does nothing!"
-#       }
-#     }
-#
-#
-# 2. Generate a Terraform Cloud user API token and store it as a GitHub secret (e.g. TF_API_TOKEN) on this repository.
-#   Documentation:
-#     - https://www.terraform.io/docs/cloud/users-teams-organizations/api-tokens.html
-#     - https://help.github.com/en/actions/configuring-and-managing-workflows/creating-and-storing-encrypted-secrets
-#
-# 3. Reference the GitHub secret in step using the `hashicorp/setup-terraform` GitHub Action.
-#   Example:
-#     - name: Setup Terraform
-#       uses: hashicorp/setup-terraform@v1
-#       with:
-#         cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
 name: 'Terraform'
-
 on:
   push:
     branches: [ "main" ]
@@ -52,173 +8,215 @@ on:
 env:
   VPC_WORKDIR: vpc
   ECR_WORKDIR: ecr
+  RDS: rds
   EKS_CLUSTER_WORKDIR: eks-cluster
   ADDON_WORKDIR: addon
   ARGOCD_WORKDIR: argocd
-
-permissions:
-  contents: read
+  MONITORING_WORKDIR : monitoring
+# permissions:
+#   contents: read
 
 jobs:
   terraform_aws_vpc:
     name: 'VPC Deployment'
-    runs-on: ubuntu-latest
-    # environment: production
+    runs-on: genisysdockerhub/terraform
 
-    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
     defaults:
       run:
         shell: bash
 
     steps:
-    # Checkout the repository to the GitHub Actions runner
     - name: Checkout
       uses: actions/checkout@v4
 
-    # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v1
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
       with:
-        cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{env.AWS_REGION}}
 
-    # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
     - name: VPC Terraform Init
       run: terraform init --backend-config="./backend/staging.tfvars" --reconfigure
       working-directory: ${{ env.VPC_WORKDIR }}
 
-      # On push to "main", build or change infrastructure according to Terraform configuration files
-      # Note: It is recommended to set up a required "strict" status check in your repository for "Terraform Cloud". See the documentation on "strict" required status checks for more information: https://help.github.com/en/github/administering-a-repository/types-of-required-status-checks
-    - name: VPC Terraform Apply
-      run: terraform apply --var-file="values/staging.tfvars" --auto-approve
-      working-directory: ${{ env.VPC_WORKDIR }}
+    # - name: VPC Terraform Apply
+    #   run: terraform apply --var-file="values/staging.tfvars" --auto-approve
+    #   working-directory: ${{ env.VPC_WORKDIR }}
   
   terraform_aws_ecr:
     name: 'ECR Deployment'
-    runs-on: ubuntu-latest
-    # environment: production
+    needs: terraform_aws_vpc
+    runs-on: genisysdockerhub/terraform
 
-    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
     defaults:
       run:
         shell: bash
 
     steps:
-    # Checkout the repository to the GitHub Actions runner
     - name: Checkout
       uses: actions/checkout@v4
 
-    # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v1
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
       with:
-        cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{env.AWS_REGION}}
 
-    # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
     - name: ECR Terraform Init
       run: terraform init --backend-config="./backend/staging.tfvars" --reconfigure
       working-directory: ${{ env.ECR_WORKDIR }}
 
-      # On push to "main", build or change infrastructure according to Terraform configuration files
-      # Note: It is recommended to set up a required "strict" status check in your repository for "Terraform Cloud". See the documentation on "strict" required status checks for more information: https://help.github.com/en/github/administering-a-repository/types-of-required-status-checks
-    - name: ECR Terraform Apply
-      run: terraform apply --var-file="values/staging.tfvars" --auto-approve
-      working-directory: ${{ env.ECR_WORKDIR }}
+    # - name: ECR Terraform Apply
+    #   run: terraform apply --var-file="values/staging.tfvars" --auto-approve
+    #   working-directory: ${{ env.ECR_WORKDIR }}
   
-  terraform_aws_eks_cluster:
-    name: 'AWS Cluster & NodeGroup Deployment'
-    needs: terraform_aws_vpc
-    runs-on: ubuntu-latest
-    # environment: production
 
-    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+####rds
+#####
+  terraform_aws_eks_rds:
+    name: 'RDS Deployment'
+    needs: terraform_aws_ecr
+    runs-on: genisysdockerhub/terraform
+
     defaults:
       run:
         shell: bash
 
     steps:
-    # Checkout the repository to the GitHub Actions runner
     - name: Checkout
       uses: actions/checkout@v4
 
-    # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v1
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
       with:
-        cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{env.AWS_REGION}}
 
-    # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
+    - name: RDS Terraform Init
+      run: terraform init --backend-config="./backend/staging.tfvars" --reconfigure
+      working-directory: ${{ env.RDS_WORKDIR }}
+
+    # - name: RDS Terraform Apply
+    #   run: terraform apply --var-file="values/staging.tfvars" --auto-approve
+    #   working-directory: ${{ env.RDS_WORKDIR }}    
+
+
+  terraform_aws_eks_cluster:
+    name: 'AWS Cluster & NodeGroup Deployment'
+    needs: terraform_aws_eks_rds
+    runs-on: genisysdockerhub/terraform
+
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{env.AWS_REGION}}
+
     - name: EKS Cluster Terraform Init
       run: terraform init --backend-config="./backend/staging.tfvars" --reconfigure
       working-directory: ${{ env.EKS_CLUSTER_WORKDIR }}
 
-      # On push to "main", build or change infrastructure according to Terraform configuration files
-      # Note: It is recommended to set up a required "strict" status check in your repository for "Terraform Cloud". See the documentation on "strict" required status checks for more information: https://help.github.com/en/github/administering-a-repository/types-of-required-status-checks
-    - name: EKS Cluster Terraform Apply
-      run: terraform apply --var-file="values/staging.tfvars" --auto-approve
-      working-directory: ${{ env.EKS_CLUSTER_WORKDIR }}
+    # - name: EKS Cluster Terraform Apply
+    #   run: terraform apply --var-file="values/staging.tfvars" --auto-approve
+    #   working-directory: ${{ env.EKS_CLUSTER_WORKDIR }}
 
   terraform_aws_eks_addon:
     name: 'AWS EKS Cluster Addon Deployment'
     needs: terraform_aws_eks_cluster
-    runs-on: ubuntu-latest
-    # environment: production
+    runs-on: genisysdockerhub/terraform
 
-    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
     defaults:
       run:
         shell: bash
 
     steps:
-    # Checkout the repository to the GitHub Actions runner
     - name: Checkout
       uses: actions/checkout@v4
 
-    # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v1
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
       with:
-        cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{env.AWS_REGION}}
 
-    # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
     - name: EKS Cluster Addon Terraform Init
       run: terraform init --backend-config="./backend/staging.tfvars" --reconfigure
       working-directory: ${{ env.ADDON_WORKDIR }}
 
-      # On push to "main", build or change infrastructure according to Terraform configuration files
-      # Note: It is recommended to set up a required "strict" status check in your repository for "Terraform Cloud". See the documentation on "strict" required status checks for more information: https://help.github.com/en/github/administering-a-repository/types-of-required-status-checks
-    - name: EKS Cluster Addon Terraform Apply
-      run: terraform apply --var-file="values/staging.tfvars" --auto-approve
-      working-directory: ${{ env.ADDON_WORKDIR }}
+    # - name: EKS Cluster Addon Terraform Apply
+    #   run: terraform apply --var-file="values/staging.tfvars" --auto-approve
+    #   working-directory: ${{ env.ADDON_WORKDIR }}
    
   terraform_aws_eks_argocd:
     name: 'AWS ArgoCD Deployment'
-    needs: terraform_aws_eks_cluster
-    runs-on: ubuntu-latest
-    # environment: production
+    needs: terraform_aws_eks_addon
+    runs-on: genisysdockerhub/terraform
 
-    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
     defaults:
       run:
         shell: bash
 
     steps:
-    # Checkout the repository to the GitHub Actions runner
     - name: Checkout
       uses: actions/checkout@v4
 
-    # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v1
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
       with:
-        cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{env.AWS_REGION}}
 
-    # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
     - name: ArgoCD Terraform Init
       run: terraform init --backend-config="./backend/staging.tfvars" --reconfigure
       working-directory: ${{ env.ARGOCD_WORKDIR }}
 
-      # On push to "main", build or change infrastructure according to Terraform configuration files
-      # Note: It is recommended to set up a required "strict" status check in your repository for "Terraform Cloud". See the documentation on "strict" required status checks for more information: https://help.github.com/en/github/administering-a-repository/types-of-required-status-checks
-    - name: ArgoCD Terraform Apply
-      run: terraform apply --var-file="values/staging.tfvars" --auto-approve
-      working-directory: ${{ env.ARGOCD_WORKDIR }}    
+    # - name: ArgoCD Terraform Apply
+    #   run: terraform apply --var-file="values/staging.tfvars" --auto-approve
+    #   working-directory: ${{ env.ARGOCD_WORKDIR }}    
+
+
+
+#####
+  terraform_aws_eks_monitoring:
+    name: 'Monitoring Deployment'
+    needs: terraform_aws_eks_argocd
+    runs-on: genisysdockerhub/terraform
+
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{env.AWS_REGION}}
+
+    - name: Monitoring Terraform Init
+      run: terraform init --backend-config="./backend/staging.tfvars" --reconfigure
+      working-directory: ${{ env.MONITORING_WORKDIR }}
+
+    # - name: Monitoring Terraform Apply
+    #   run: terraform apply --var-file="values/staging.tfvars" --auto-approve
+    #   working-directory: ${{ env.MONITORING_WORKDIR }}    
+
+
