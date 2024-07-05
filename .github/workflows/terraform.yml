@@ -38,7 +38,7 @@ jobs:
         aws-region: ${{ secrets.AWS_REGION }}
 
     - name: VPC Terraform Init
-      run:  terraform init --backend-config="./backend/staging.tfvars" --reconfigure
+      run:  apt-get install git -y && terraform init --backend-config="./backend/staging.tfvars" --reconfigure
       working-directory: ${{ env.VPC_WORKDIR }}
 
     - name: VPC Terraform Apply
