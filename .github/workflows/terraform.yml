@@ -129,7 +129,7 @@ jobs:
         aws-region: ${{ secrets.AWS_REGION }}
 
     - name: EKS Cluster Terraform Init
-      run: terraform init --backend-config="./backend/staging.tfvars" --reconfigure
+      run: ls && pwd && aws s3 ls &&  terraform init --backend-config="./backend/staging.tfvars" --reconfigure
       working-directory: ${{ env.EKS_CLUSTER_WORKDIR }}
 
     - name: EKS Cluster Terraform Apply
@@ -158,7 +158,7 @@ jobs:
         aws-region: ${{ secrets.AWS_REGION }}
 
     - name: EKS Cluster Addon Terraform Init
-      run: ls && pwd && aws s3 ls && terraform init --backend-config="./backend/staging.tfvars" --reconfigure
+      run: terraform init --backend-config="./backend/staging.tfvars" --reconfigure
       working-directory: ${{ env.ADDON_WORKDIR }}
 
     - name: EKS Cluster Addon Terraform Apply
