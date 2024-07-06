@@ -42,7 +42,7 @@ jobs:
       working-directory: ${{ env.VPC_WORKDIR }}
 
     - name: VPC Terraform Apply
-      run: terraform plan --var-file="values/staging.tfvars" # --auto-approve
+      run: terraform apply --var-file="values/staging.tfvars"   --auto-approve
       working-directory: ${{ env.VPC_WORKDIR }}
   
   terraform_aws_ecr:
@@ -71,7 +71,7 @@ jobs:
       working-directory: ${{ env.ECR_WORKDIR }}
 
     - name: ECR Terraform Apply
-      run: terraform plan --var-file="values/staging.tfvars" # --auto-approve
+      run: terraform apply --var-file="values/staging.tfvars"   --auto-approve
       working-directory: ${{ env.ECR_WORKDIR }}
   
 
@@ -103,7 +103,7 @@ jobs:
       working-directory: ${{ env.RDS_WORKDIR }}
 
     - name: RDS Terraform Apply
-      run: terraform plan --var-file="values/staging.tfvars" # --auto-approve
+      run: terraform apply --var-file="values/staging.tfvars"   --auto-approve
       working-directory: ${{ env.RDS_WORKDIR }}    
 
 
@@ -129,11 +129,11 @@ jobs:
         aws-region: ${{ secrets.AWS_REGION }}
 
     - name: EKS Cluster Terraform Init
-      run: terraform --version && ls && pwd && aws s3 ls &&  terraform init --backend-config="./backend/staging.tfvars" --reconfigure
+      run: terraform init --backend-config="./backend/staging.tfvars" --reconfigure
       working-directory: ${{ env.EKS_CLUSTER_WORKDIR }}
 
     - name: EKS Cluster Terraform Apply
-      run: terraform plan --var-file="values/staging.tfvars" # --auto-approve
+      run: terraform apply --var-file="values/staging.tfvars"   --auto-approve
       working-directory: ${{ env.EKS_CLUSTER_WORKDIR }}
 
   terraform_aws_eks_addon:
@@ -162,7 +162,7 @@ jobs:
       working-directory: ${{ env.ADDON_WORKDIR }}
 
     - name: EKS Cluster Addon Terraform Apply
-      run: terraform plan --var-file="values/staging.tfvars" # --auto-approve
+      run: terraform apply --var-file="values/staging.tfvars"   --auto-approve
       working-directory: ${{ env.ADDON_WORKDIR }}
    
   terraform_aws_eks_argocd:
@@ -191,7 +191,7 @@ jobs:
       working-directory: ${{ env.ARGOCD_WORKDIR }}
 
     - name: ArgoCD Terraform Apply
-      run: terraform plan --var-file="values/staging.tfvars" # --auto-approve
+      run: terraform apply --var-file="values/staging.tfvars"   --auto-approve
       working-directory: ${{ env.ARGOCD_WORKDIR }}    
 
 
@@ -222,7 +222,6 @@ jobs:
       working-directory: ${{ env.MONITORING_WORKDIR }}
 
     - name: Monitoring Terraform Apply
-      run: terraform plan --var-file="values/staging.tfvars" # --auto-approve
+      run: terraform apply --var-file="values/staging.tfvars"   --auto-approve
       working-directory: ${{ env.MONITORING_WORKDIR }}    
-
 
