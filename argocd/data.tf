@@ -37,3 +37,12 @@ data "terraform_remote_state" "addon" {
     # profile        = var.data_addon_state_profile 
   }
 }
+data "terraform_remote_state" "ecr" {
+  backend = "s3"
+  config = {
+    bucket         = var.data_ecr_state_bucket 
+    key            = var. data_ecr_state_bucket_key 
+    region         = var.data_ecr_state_region 
+    # profile        = var.data_ecr_state_profile 
+  }
+}

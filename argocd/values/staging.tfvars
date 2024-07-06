@@ -38,9 +38,9 @@ data_addon_state_region     = "ap-south-1"
 data_addon_state_profile    = "default"
 
 ######backend config for ECR cluster######
-data_addon_state_bucket     = "terraformstatebucketcm"
-data_addon_state_bucket_key = "ecr/terraform.state"
-data_addon_state_dynamodb   = "terraformstatebucketcm"
-data_addon_state_region     = "ap-south-1"
-data_addon_state_profile    = "default"
+data_ecr_state_bucket     = "terraformstatebucketcm"
+data_ecr_state_bucket_key = "ecr/terraform.state"
+data_ecr_state_dynamodb   = "terraformstatebucketcm"
+data_ecr_state_region     = "ap-south-1"
+data_ecr_state_profile    = "default"
 

@@ -165,3 +165,30 @@ variable "data_addon_state_dynamodb" {
   type        = string
 }
 
+###ECR
+variable "data_ecr_state_bucket_key" {
+  description = "Key for remote state storage"
+  type        = string
+}
+
+variable "data_ecr_state_region" {
+  description = "Region for remote state storage"
+  type        = string
+}
+
+# variable "data_addon_state_profile" {
+#   description = "AWS profile for remote state storage"
+#   type        = string
+# }
+
+variable "data_ecr_state_bucket" {
+  description = "s3 bucket"
+  type        = string
+}
+
+
+variable "data_ecr_state_dynamodb" {
+  description = "dynamodb"
+  type        = string
+}
+
