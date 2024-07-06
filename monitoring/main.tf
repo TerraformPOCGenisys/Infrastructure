@@ -190,15 +190,15 @@ resource "helm_release" "k8s-monitoring" {
     value = "false"
   }
 
-  # set {
-  #   name  = "alloy"
-  #   value = ""
-  # }
+  set {
+    name  = "metrics.enabled"
+    value = "true"
+  }
 
-  # set {
-  #   name  = "alloy-logs"
-  #   value = ""
-  # }
+  set {
+    name  = "metrics.node-exporter.enabled"
+    value = "true"
+  }
 }
 
 ###ingress
