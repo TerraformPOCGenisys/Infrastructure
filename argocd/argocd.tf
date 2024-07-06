@@ -123,8 +123,8 @@ resource "helm_release" "argocd_imageupdater_helm" {
     config:
       registries: 
         - name: ECR
-          api_url: ${var.ecr_api_url}  
-          prefix: ${var.ecr_prefix_url} 
+          api_url: "https://${data.aws_caller_identity.current.account_id}.dkr.ecr.${var.aws_region}.amazonaws.com"
+          prefix: "${data.aws_caller_identity.current.account_id}.dkr.ecr.${var.aws_region}.amazonaws.com"
           ping: yes
           insecure: no
           credentials: ext:/scripts/auth1.sh

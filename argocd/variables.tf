@@ -19,12 +19,12 @@ variable "eks_cluster_name" {
 }
 
 
-variable "ecr_api_url" {
-  default = ""
-}
-variable "ecr_prefix_url" {
-  default = ""
-}
+# variable "ecr_api_url" {
+#   default = ""
+# }
+# variable "ecr_prefix_url" {
+#   default = ""
+# }
 
 variable "argocd_image_updater_service_name" {
   default = ""

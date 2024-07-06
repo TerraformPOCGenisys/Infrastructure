@@ -6,6 +6,7 @@ data "aws_eks_cluster_auth" "cluster" {
   name = data.terraform_remote_state.cluster.outputs.cluster_name
 }
 
+data "aws_caller_identity" "current" {}
 
 
 ########
