@@ -1,228 +1,228 @@
 
-name: 'Terraform'
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
+# name: 'Terraform'
+# on:
+#   push:
+#     branches: [ "main" ]
+#   pull_request:
 
-env:
-  VPC_WORKDIR: vpc
-  ECR_WORKDIR: ecr
-  RDS_WORKDIR: rds
-  EKS_CLUSTER_WORKDIR: eks-cluster
-  ADDON_WORKDIR: addon
-  ARGOCD_WORKDIR: argocd
-  MONITORING_WORKDIR : monitoring
-# permissions:
-#   contents: read
+# env:
+#   VPC_WORKDIR: vpc
+#   ECR_WORKDIR: ecr
+#   RDS_WORKDIR: rds
+#   EKS_CLUSTER_WORKDIR: eks-cluster
+#   ADDON_WORKDIR: addon
+#   ARGOCD_WORKDIR: argocd
+#   MONITORING_WORKDIR : monitoring
+# # permissions:
+# #   contents: read
 
-jobs:
-  terraform_aws_vpc:
-    name: 'VPC Deployment'
-    runs-on: ubuntu-latest
-    container: genisysdockerhub/terraform
+# jobs:
+#   terraform_aws_vpc:
+#     name: 'VPC Deployment'
+#     runs-on: ubuntu-latest
+#     container: genisysdockerhub/terraform
 
-    defaults:
-      run:
-        shell: bash
+#     defaults:
+#       run:
+#         shell: bash
 
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+#     steps:
+#     - name: Checkout
+#       uses: actions/checkout@v4
 
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ secrets.AWS_REGION }}
+#     - name: Configure AWS credentials
+#       uses: aws-actions/configure-aws-credentials@v1
+#       with:
+#         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#         aws-region: ${{ secrets.AWS_REGION }}
 
-    - name: VPC Terraform Init
-      run:  terraform init --backend-config="./backend/staging.tfvars" --reconfigure
-      working-directory: ${{ env.VPC_WORKDIR }}
+#     - name: VPC Terraform Init
+#       run:  terraform init --backend-config="./backend/staging.tfvars" --reconfigure
+#       working-directory: ${{ env.VPC_WORKDIR }}
 
-    - name: VPC Terraform Apply
-      run: terraform apply --var-file="values/staging.tfvars"   --auto-approve
-      working-directory: ${{ env.VPC_WORKDIR }}
+#     - name: VPC Terraform Apply
+#       run: terraform apply --var-file="values/staging.tfvars"   --auto-approve
+#       working-directory: ${{ env.VPC_WORKDIR }}
   
-  terraform_aws_ecr:
-    name: 'ECR Deployment'
-    needs: terraform_aws_vpc
-    runs-on: ubuntu-latest
-    container: genisysdockerhub/terraform
+#   terraform_aws_ecr:
+#     name: 'ECR Deployment'
+#     needs: terraform_aws_vpc
+#     runs-on: ubuntu-latest
+#     container: genisysdockerhub/terraform
 
-    defaults:
-      run:
-        shell: bash
+#     defaults:
+#       run:
+#         shell: bash
 
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+#     steps:
+#     - name: Checkout
+#       uses: actions/checkout@v4
 
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ secrets.AWS_REGION }}
+#     - name: Configure AWS credentials
+#       uses: aws-actions/configure-aws-credentials@v1
+#       with:
+#         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#         aws-region: ${{ secrets.AWS_REGION }}
 
-    - name: ECR Terraform Init
-      run: terraform init --backend-config="./backend/staging.tfvars" --reconfigure
-      working-directory: ${{ env.ECR_WORKDIR }}
+#     - name: ECR Terraform Init
+#       run: terraform init --backend-config="./backend/staging.tfvars" --reconfigure
+#       working-directory: ${{ env.ECR_WORKDIR }}
 
-    - name: ECR Terraform Apply
-      run: terraform apply --var-file="values/staging.tfvars"   --auto-approve
-      working-directory: ${{ env.ECR_WORKDIR }}
+#     - name: ECR Terraform Apply
+#       run: terraform apply --var-file="values/staging.tfvars"   --auto-approve
+#       working-directory: ${{ env.ECR_WORKDIR }}
   
 
-####rds
-#####
-  terraform_aws_eks_rds:
-    name: 'RDS Deployment'
-    needs: terraform_aws_ecr
-    runs-on: ubuntu-latest
-    container: genisysdockerhub/terraform
+# ####rds
+# #####
+#   terraform_aws_eks_rds:
+#     name: 'RDS Deployment'
+#     needs: terraform_aws_ecr
+#     runs-on: ubuntu-latest
+#     container: genisysdockerhub/terraform
 
-    defaults:
-      run:
-        shell: bash
+#     defaults:
+#       run:
+#         shell: bash
 
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+#     steps:
+#     - name: Checkout
+#       uses: actions/checkout@v4
 
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ secrets.AWS_REGION }}
+#     - name: Configure AWS credentials
+#       uses: aws-actions/configure-aws-credentials@v1
+#       with:
+#         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#         aws-region: ${{ secrets.AWS_REGION }}
 
-    - name: RDS Terraform Init
-      run: terraform init --backend-config="./backend/staging.tfvars" --reconfigure
-      working-directory: ${{ env.RDS_WORKDIR }}
+#     - name: RDS Terraform Init
+#       run: terraform init --backend-config="./backend/staging.tfvars" --reconfigure
+#       working-directory: ${{ env.RDS_WORKDIR }}
 
-    - name: RDS Terraform Apply
-      run: terraform apply --var-file="values/staging.tfvars"   --auto-approve
-      working-directory: ${{ env.RDS_WORKDIR }}    
+#     - name: RDS Terraform Apply
+#       run: terraform apply --var-file="values/staging.tfvars"   --auto-approve
+#       working-directory: ${{ env.RDS_WORKDIR }}    
 
 
-  terraform_aws_eks_cluster:
-    name: 'AWS Cluster & NodeGroup Deployment'
-    needs: terraform_aws_eks_rds
-    runs-on: ubuntu-latest
-    container: genisysdockerhub/terraform
+#   terraform_aws_eks_cluster:
+#     name: 'AWS Cluster & NodeGroup Deployment'
+#     needs: terraform_aws_eks_rds
+#     runs-on: ubuntu-latest
+#     container: genisysdockerhub/terraform
 
-    defaults:
-      run:
-        shell: bash
+#     defaults:
+#       run:
+#         shell: bash
 
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+#     steps:
+#     - name: Checkout
+#       uses: actions/checkout@v4
 
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ secrets.AWS_REGION }}
+#     - name: Configure AWS credentials
+#       uses: aws-actions/configure-aws-credentials@v1
+#       with:
+#         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#         aws-region: ${{ secrets.AWS_REGION }}
 
-    - name: EKS Cluster Terraform Init
-      run: terraform init --backend-config="./backend/staging.tfvars" --reconfigure
-      working-directory: ${{ env.EKS_CLUSTER_WORKDIR }}
+#     - name: EKS Cluster Terraform Init
+#       run: terraform init --backend-config="./backend/staging.tfvars" --reconfigure
+#       working-directory: ${{ env.EKS_CLUSTER_WORKDIR }}
 
-    - name: EKS Cluster Terraform Apply
-      run: terraform apply --var-file="values/staging.tfvars"   --auto-approve
-      working-directory: ${{ env.EKS_CLUSTER_WORKDIR }}
+#     - name: EKS Cluster Terraform Apply
+#       run: terraform apply --var-file="values/staging.tfvars"   --auto-approve
+#       working-directory: ${{ env.EKS_CLUSTER_WORKDIR }}
 
-  terraform_aws_eks_addon:
-    name: 'AWS EKS Cluster Addon Deployment'
-    needs: terraform_aws_eks_cluster
-    runs-on: ubuntu-latest
-    container: genisysdockerhub/terraform
+#   terraform_aws_eks_addon:
+#     name: 'AWS EKS Cluster Addon Deployment'
+#     needs: terraform_aws_eks_cluster
+#     runs-on: ubuntu-latest
+#     container: genisysdockerhub/terraform
 
-    defaults:
-      run:
-        shell: bash
+#     defaults:
+#       run:
+#         shell: bash
 
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+#     steps:
+#     - name: Checkout
+#       uses: actions/checkout@v4
 
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ secrets.AWS_REGION }}
+#     - name: Configure AWS credentials
+#       uses: aws-actions/configure-aws-credentials@v1
+#       with:
+#         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#         aws-region: ${{ secrets.AWS_REGION }}
 
-    - name: EKS Cluster Addon Terraform Init
-      run: terraform init --backend-config="./backend/staging.tfvars" --reconfigure
-      working-directory: ${{ env.ADDON_WORKDIR }}
+#     - name: EKS Cluster Addon Terraform Init
+#       run: terraform init --backend-config="./backend/staging.tfvars" --reconfigure
+#       working-directory: ${{ env.ADDON_WORKDIR }}
 
-    - name: EKS Cluster Addon Terraform Apply
-      run: terraform apply --var-file="values/staging.tfvars"   --auto-approve
-      working-directory: ${{ env.ADDON_WORKDIR }}
+#     - name: EKS Cluster Addon Terraform Apply
+#       run: terraform apply --var-file="values/staging.tfvars"   --auto-approve
+#       working-directory: ${{ env.ADDON_WORKDIR }}
    
-  terraform_aws_eks_argocd:
-    name: 'AWS ArgoCD Deployment'
-    needs: terraform_aws_eks_addon
-    runs-on: ubuntu-latest
-    container: genisysdockerhub/terraform
+#   terraform_aws_eks_argocd:
+#     name: 'AWS ArgoCD Deployment'
+#     needs: terraform_aws_eks_addon
+#     runs-on: ubuntu-latest
+#     container: genisysdockerhub/terraform
 
-    defaults:
-      run:
-        shell: bash
+#     defaults:
+#       run:
+#         shell: bash
 
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+#     steps:
+#     - name: Checkout
+#       uses: actions/checkout@v4
 
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ secrets.AWS_REGION }}
+#     - name: Configure AWS credentials
+#       uses: aws-actions/configure-aws-credentials@v1
+#       with:
+#         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#         aws-region: ${{ secrets.AWS_REGION }}
 
-    - name: ArgoCD Terraform Init
-      run: terraform init --backend-config="./backend/staging.tfvars" --reconfigure
-      working-directory: ${{ env.ARGOCD_WORKDIR }}
+#     - name: ArgoCD Terraform Init
+#       run: terraform init --backend-config="./backend/staging.tfvars" --reconfigure
+#       working-directory: ${{ env.ARGOCD_WORKDIR }}
 
-    - name: ArgoCD Terraform Apply
-      run: terraform apply --var-file="values/staging.tfvars"   --auto-approve
-      working-directory: ${{ env.ARGOCD_WORKDIR }}    
+#     - name: ArgoCD Terraform Apply
+#       run: terraform apply --var-file="values/staging.tfvars"   --auto-approve
+#       working-directory: ${{ env.ARGOCD_WORKDIR }}    
 
 
 
-#####
-  terraform_aws_eks_monitoring:
-    name: 'Monitoring Deployment'
-    needs: terraform_aws_eks_argocd
-    runs-on: ubuntu-latest
-    container: genisysdockerhub/terraform
+# #####
+#   terraform_aws_eks_monitoring:
+#     name: 'Monitoring Deployment'
+#     needs: terraform_aws_eks_argocd
+#     runs-on: ubuntu-latest
+#     container: genisysdockerhub/terraform
 
-    defaults:
-      run:
-        shell: bash
+#     defaults:
+#       run:
+#         shell: bash
 
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+#     steps:
+#     - name: Checkout
+#       uses: actions/checkout@v4
 
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ secrets.AWS_REGION }}
+#     - name: Configure AWS credentials
+#       uses: aws-actions/configure-aws-credentials@v1
+#       with:
+#         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#         aws-region: ${{ secrets.AWS_REGION }}
 
-    - name: Monitoring Terraform Init
-      run: terraform init --backend-config="./backend/staging.tfvars" --reconfigure
-      working-directory: ${{ env.MONITORING_WORKDIR }}
+#     - name: Monitoring Terraform Init
+#       run: terraform init --backend-config="./backend/staging.tfvars" --reconfigure
+#       working-directory: ${{ env.MONITORING_WORKDIR }}
 
-    - name: Monitoring Terraform Apply
-      run: terraform apply --var-file="values/staging.tfvars"   --auto-approve
-      working-directory: ${{ env.MONITORING_WORKDIR }}    
+#     - name: Monitoring Terraform Apply
+#       run: terraform apply --var-file="values/staging.tfvars"   --auto-approve
+#       working-directory: ${{ env.MONITORING_WORKDIR }}    
 
