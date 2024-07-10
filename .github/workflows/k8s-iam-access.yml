@@ -1,0 +1,50 @@
+name: 'IAM Access to K8S'
+on:
+  workflow_dispatch:
+    inputs:
+      aws_iam_arn:
+        description: 'AWS IAM ARN'
+        required: true
+        type: string
+      cluster_name:
+        description: 'EKS Cluster Name'
+        required: true
+        type: string
+      k8s_username:
+        description: 'K8s Username'
+        required: true
+        type: string
+      k8s_region:
+        description: 'K8s region'
+        required: true
+        type: string
+env:
+  IAM_WORKDIR: iam-k8s-access
+
+jobs:
+  terraform_aws_vpc:
+    name: 'IAM Access to k8s'
+    runs-on: ubuntu-latest
+    container: genisysdockerhub/terraform
+
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+
+    - name: Running Script to Grant Access
+      run: |
+        aws eks update-kubeconfig --name  ${{ github.event.inputs.cluster_name }}  --region ${{ github.event.inputs.k8s_region }}
+        kubectl apply -f k8s-acces-role.yaml
+        eksctl create iamidentitymapping --cluster ${{ github.event.inputs.cluster_name }} --arn ${{ github.event.inputs.aws_iam_arn }} --username ${{ github.event.inputs.k8s_username }}
+      working-directory: ${{ env.IAM_WORKDIR }}
