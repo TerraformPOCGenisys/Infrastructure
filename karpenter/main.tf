@@ -109,13 +109,16 @@ spec:
       requirements:
         - key: karpenter.sh/capacity-type
           operator: In
-          values: ["on-demand"]
+          values: ["on-demand","spot"]
         - key: karpenter.k8s.aws/instance-category
           operator: In
           values: ["t","c","m","r"]
         - key: karpenter.k8s.aws/instance-size
           operator: In
           values: ["medium","large","xlarge"]
+        - key: kubernetes.io/arch
+          operator: In
+          values: ["x86_64","amd64"]
       nodeClassRef:
         name: k8s-karpenter-nodepool
   limits:
