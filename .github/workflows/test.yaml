@@ -1,0 +1,41 @@
+
+name: 'test'
+on:
+  workflow_dispatch:
+
+env:
+  EKS_CLUSTER_WORKDIR: eks-cluster
+# permissions:
+#   contents: read
+
+jobs:
+
+  terraform_aws_eks_cluster:
+    name: 'AWS Cluster & NodeGroup Deployment'
+    runs-on: ubuntu-latest
+    container: genisysdockerhub/terraform
+
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+
+    - name: EKS Cluster Terraform Init
+      run: terraform init --backend-config="./backend/staging.tfvars" --reconfigure
+      working-directory: ${{ env.EKS_CLUSTER_WORKDIR }}
+
+    - name: EKS Cluster Terraform Apply
+      run: terraform destroy --var-file="values/staging.tfvars"   --auto-approve
+      working-directory: ${{ env.EKS_CLUSTER_WORKDIR }}
+
+
