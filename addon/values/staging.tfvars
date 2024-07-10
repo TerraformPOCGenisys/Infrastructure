@@ -6,7 +6,7 @@ env             = "staging"
 
 ######backend config for EKS cluster######
 data_cluster_state_bucket     = "terraformstatebucketcm"
-data_cluster_state_bucket_key = "eks-clusters/terraform.state"
+data_cluster_state_bucket_key = "eks-cluster/terraform.state"
 data_cluster_state_region     = "ap-south-1"
 data_cluster_state_profile    = "default"
 data_cluster_state_dynamodb   = "terraformstatebucketcm"

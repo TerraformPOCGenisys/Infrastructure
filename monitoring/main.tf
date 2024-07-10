@@ -11,43 +11,7 @@ resource "kubernetes_namespace" "monitoring" {
     name = var.monitoring_namespace
   }
 }
-# resource "kubectl_manifest" "storageclass" {
-#   depends_on = [  kubernetes_namespace.monitoring]
 
-#   yaml_body = <<YAML
-# apiVersion: storage.k8s.io/v1
-# kind: StorageClass
-# metadata:
-#   name: storage-class-ebs-${var.eks_cluster_name}
-# provisioner: ebs.csi.aws.com
-# volumeBindingMode: WaitForFirstConsumer
-# allowVolumeExpansion: true
-# parameters:
-#   type: gp3
-#   encrypted: "true"
-# YAML
-
-# }
-
-# resource "kubectl_manifest" "pvc" {
-#   depends_on = [  kubectl_manifest.storageclass]
-
-#   yaml_body = <<YAML
-# apiVersion: v1
-# kind: PersistentVolumeClaim
-# metadata:
-#   name: pvc-claim-ebs-${var.eks_cluster_name}
-#   namespace : ${var.monitoring_namespace}
-# spec:
-#   accessModes:
-#     - ReadWriteOnce
-#   storageClassName: storage-class-ebs-${var.eks_cluster_name}
-#   resources:
-#     requests:
-#       storage: 15Gi
-# YAML
-
-# }
 resource "kubectl_manifest" "service_account_deployment" {
 
   yaml_body = <<YAML
@@ -121,7 +85,6 @@ resource "helm_release" "grafana" {
 
 ####### loki  ######################
 resource "helm_release" "loki" {
-  #depends_on = [  module.lb_role , kubernetes_service_account.service-account]
   depends_on = [  helm_release.grafana]
   name       = "loki"
   repository = "https://grafana.github.io/helm-charts"
@@ -131,43 +94,43 @@ resource "helm_release" "loki" {
 
 }
 ####### mimir  ######################
-resource "helm_release" "mimir" {
-  #depends_on = [  module.lb_role , kubernetes_service_account.service-account]
-  depends_on = [  helm_release.loki]
-  name       = "mimir"
-  repository = "https://grafana.github.io/helm-charts"
-  chart      = "mimir-distributed"
-  namespace  = var.monitoring_namespace
-  version    = var.mimir_version  
+# resource "helm_release" "mimir" {
+#   #depends_on = [  module.lb_role , kubernetes_service_account.service-account]
+#   depends_on = [  helm_release.loki]
+#   name       = "mimir"
+#   repository = "https://grafana.github.io/helm-charts"
+#   chart      = "mimir-distributed"
+#   namespace  = var.monitoring_namespace
+#   version    = var.mimir_version  
 
+# }
+resource "helm_release" "kube-prometheus" {
+  depends_on = [  helm_release.loki]
+  name       = "prometheus"
+  namespace  = var.monitoring_namespace
+  version    = "19.7.2"
+  repository = "https://prometheus-community.github.io/helm-charts"
+  chart      = "prometheus"
+  values     = [file("prometheus-values.yaml")]
 }
-####### mimir  ######################
+####### alloy  ######################
 resource "helm_release" "k8s-monitoring" {
   #depends_on = [  module.lb_role , kubernetes_service_account.service-account]
-  depends_on = [  helm_release.mimir]
+  depends_on = [  helm_release.loki]
   name       = "k8s-monitoring"
   repository = "https://grafana.github.io/helm-charts"
   chart      = "k8s-monitoring"
   namespace  = var.monitoring_namespace
-  version    = var.k8s_monitoring_version  
-
+  version    = var.k8s_monitoring_version 
+  # values     = [file("k8s-values.yaml")] 
   set {
     name  = "cluster.name"
-    value = "${var.eks_cluster_name}"
+    value = "eks-stag-poc"
   }
+
   set {
     name  = "externalServices.prometheus.host"
-    value = "http://mimir-nginx.monitoring.svc.cluster.local"
-  }
-
-  set {
-    name  = "externalServices.prometheus.writeEndpoint"
-    value = "/api/v1/push"
-  }
-
-  set {
-    name  = "externalServices.prometheus.authMode"
-    value = "none"
+    value = "http://dumy.monitoring.svc.cluster.local"
   }
 
   set {
@@ -176,36 +139,46 @@ resource "helm_release" "k8s-monitoring" {
   }
 
   set {
-    name  = "externalServices.loki.authMode"
-    value = "none"
-  }
-
-  set {
-    name  = "opencost.enabled"
-    value = "false"
-  }
-
-  set {
-    name  = "prometheus-operator-crds.enabled"
-    value = "false"
-  }
-
-  set {
-    name  = "metrics.enabled"
-    value = "true"
-  }
-
-  set {
     name  = "metrics.node-exporter.enabled"
+    value = "false"
+  }
+
+  set {
+    name  = "logs.pod_logs.gatherMethod"
+    value = "api"
+  }
+
+  set {
+    name  = "prometheus-node-exporter.enabled"
+    value = "false"
+  }
+
+  set {
+    name  = "alloy-logs.alloy.clustering.enabled"
     value = "true"
+  }
+
+  set {
+    name  = "alloy-logs.alloy.mounts.varlog"
+    value = "false"
+  }
+
+  set {
+    name  = "alloy-logs.controller.replicas"
+    value = "2"
+  }
+
+  set {
+    name  = "alloy-logs.controller.type"
+    value = "deployment"
   }
 }
 
 ###ingress
 resource "kubernetes_ingress_v1" "monitoring-ingress" {
-  depends_on = [
-      helm_release.grafana
-  ]
+  # depends_on = [
+  #     helm_release.mimir
+  # ]
   wait_for_load_balancer = true
   metadata {
     namespace = var.monitoring_namespace

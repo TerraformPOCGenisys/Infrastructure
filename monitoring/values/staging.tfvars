@@ -13,7 +13,7 @@ grafana_host_name = "grafana-staging.cmrinfo.in"
 
 ######backend config for EKS cluster######
 data_cluster_state_bucket = "terraformstatebucketcm"
-data_cluster_state_bucket_key = "eks-clusters/terraform.state"
+data_cluster_state_bucket_key = "eks-cluster/terraform.state"
 data_cluster_state_region = "ap-south-1"
 data_cluster_state_profile = "default"
 data_cluster_state_dynamodb = "terraformstatebucketcm"
@@ -25,7 +25,7 @@ data_vpc_state_profile = "default"
 data_vpc_state_dynamodb = "terraformstatebucketcm"
 ######backend config for ADDON cluster######
 data_addon_state_bucket = "terraformstatebucketcm"
-data_addon_state_bucket_key = "addons/terraform.state"
+data_addon_state_bucket_key = "addon/terraform.state"
 data_addon_state_region  = "ap-south-1"
 data_addon_state_profile  = "default"
 data_addon_state_dynamodb = "terraformstatebucketcm"

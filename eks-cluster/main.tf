@@ -58,30 +58,24 @@ module "eks" {
       service_account_role_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.aws_eks_cluster}-ebs-csi-controller"
     }
   }
-  eks_managed_node_groups = var.eks_managed_node_groups
-  # fargate_profiles        = merge(var.fargate_profiles)
+  eks_managed_node_groups = {
+  tools = {
+    name         = "poc-node-group"
+    min_size     = 1
+    max_size     = 5
+    desired_size = 1
 
-  /*fargate_profiles = {
-    k8s-fargate-profile = {
-      name = "coredns"
-      selectors = [
-        {
-          namespace = "kube-system"
-        },
-        {
-          namespace = "default"
-        },
-        {
-          namespace = "${var.namespace}"
-        },
-        {
-          namespace = "*"
-        }
-      ]
-      subnet_ids = flatten([data.terraform_remote_state.vpc_state.outputs.private_subnets])
+    instance_types = ["t3.xlarge"]
+    capacity_type  = "ON_DEMAND"
+
+    update_config = {
+      max_unavailable_percentage = 50 # or set `max_unavailable`
     }
   }
-  */
+}
+
+  # eks_managed_node_groups = var.deploy_application_on_fargate ? {} : local.default_eks_managed_node_groups #var.eks_managed_node_groups
+  fargate_profiles        = var.deploy_application_on_fargate ? local.default_fargate_profiles : {}
   cluster_security_group_tags = merge(var.resource_tags, {
     "karpenter.sh/discovery" = "ogm-eks-${var.environment}"
   })
@@ -90,6 +84,9 @@ module "eks" {
   })
 }
 
+
+
+#####EBS
 locals {
   ebs_csi_service_account_namespace = "kube-system"
   ebs_csi_service_account_name      = "ebs-csi-controller-sa"

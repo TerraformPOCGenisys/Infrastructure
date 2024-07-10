@@ -13,7 +13,21 @@ resource_tags = {
   "Sensitivity" : "yes"
   "Managed By" = "Terraform"
 }
+deploy_application_on_fargate = true
 
+# gitlab_user = "arn:aws:iam::xxxxxxxxxxxxxxxxxxx:user/gitlab-k8s-user"
+
+####data-remote-state-variable-values
+
+data_vpc_state_bucket         = "terraformstatebucketcm"
+data_vpc_state_key            = "vpc/terraform.state"
+data_vpc_state_region         = "ap-south-1"
+data_vpc_state_dynamodb_table = "terraformstatebucketcm"
+data_vpc_state_profile        = "default"
+
+
+
+##################################EC2#################
 eks_managed_node_groups = {
   tools = {
     name         = "poc-node-group"
@@ -29,12 +43,29 @@ eks_managed_node_groups = {
     }
   }
 }
-# gitlab_user = "arn:aws:iam::xxxxxxxxxxxxxxxxxxx:user/gitlab-k8s-user"
 
-####data-remote-state-variable-values
 
-data_vpc_state_bucket         = "terraformstatebucketcm"
-data_vpc_state_key            = "vpc/terraform.state"
-data_vpc_state_region         = "ap-south-1"
-data_vpc_state_dynamodb_table = "terraformstatebucketcm"
-data_vpc_state_profile        = "default"
+
+############################Fargate#################
+
+
+# {
+#     k8s-fargate-profile = {
+#       name = "coredns"
+#       selectors = [
+#         {
+#           namespace = "kube-system"
+#         },
+#         {
+#           namespace = "default"
+#         },
+#         {
+#           namespace = "${var.namespace}"
+#         },
+#         {
+#           namespace = "*"
+#         }
+#       ]
+#       subnet_ids = flatten([data.terraform_remote_state.vpc_state.outputs.private_subnets])
+#     }
+#   }

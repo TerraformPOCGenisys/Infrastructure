@@ -1,20 +1,32 @@
+
+
+
+##AWS Fargate
 cluster:
-  name: qa-cluster
+  name: eks-stag-poc
+
 externalServices:
   prometheus:
-    host: "http://mimir-nginx.monitoring.svc.cluster.local"
-    writeEndpoint: /api/v1/push
-    authMode: none
+    host: "http://dumy.monitoring.svc.cluster.local"
   loki:
-    host: "http://loki-loki-distributed-gateway.monitoring.svc.cluster.local"
-    authMode: none
+    host: http://loki-loki-distributed-gateway.monitoring.svc.cluster.local
 
+metrics:
+  node-exporter:
+    enabled: false
 
-opencost:
+logs:
+  pod_logs:
+    gatherMethod: api
+
+prometheus-node-exporter:
   enabled: false
 
-
-prometheus-operator-crds:
-  enabled: false
-alloy: {}
-alloy-logs: {}
+alloy-logs:
+  alloy:
+    clustering: {enabled: true}
+    mounts:
+      varlog: false
+  controller:
+    replicas: 2
+    type: deployment

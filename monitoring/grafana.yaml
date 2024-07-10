@@ -1,0 +1,16 @@
+persistence:
+  accessModes:
+  - ReadWriteOnce
+  enabled: true
+  finalizers:
+  - kubernetes.io/pvc-protection
+  size: 10Gi
+  type: pvc
+resources:
+  limits:
+    cpu: 200m
+    memory: 256Mi
+  requests:
+    cpu: 200m
+    memory: 256Mi
+

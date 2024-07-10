@@ -1,5 +1,5 @@
 bucket         = "terraformstatebucketcm"
-key            = "eks-clusters/terraform.state"
+key            = "eks-cluster/terraform.state"
 dynamodb_table = "terraformstatebucketcm"
 region         = "ap-south-1"
 # profile        = "default"

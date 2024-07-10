@@ -1,0 +1,44 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inflate
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: inflate
+  template:
+    metadata:
+      labels:
+        app: inflate
+    spec:
+      # nodeSelector:
+      #   intent: k8s-karpenter-nodepool
+      terminationGracePeriodSeconds: 0
+      containers:
+        - name: inflate
+          image: nginx:latest
+          resources:
+            requests:
+              memory: 512Mi
+              cpu: 250m
+            limits:
+              memory: 512Mi
+              cpu: 250m
+
+--- 
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: inflate
+spec:
+  type: NodePort
+  selector:
+    app: inflate
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+      nodePort: 30001 # You can specify the nodePort here, or let Kubernetes allocate one automatically

@@ -31,10 +31,27 @@ variable "aws_secret_key" {
   type    = string
   default = ""
 }
-/*variable "fargate_profiles" {
-  type = any
+# variable "fargate_profiles" {
+#   type = any
+# }
+variable "fargate_profiles" {
+  description = "Configuration for Fargate profiles"
+  type = map(any)
+  default = {}
 }
-*/
+variable "eks_managed_node_groups" {
+  description = "Configuration for EKS managed node groups"
+  type = map(any)
+  default = {}
+}
+
+
+
+variable "deploy_application_on_fargate" {
+  description = "Whether to deploy Fargate profiles (true) or EKS managed node groups (false)"
+  type        = bool
+  default     = false
+}
 variable "environment" {
   description = "The name of the environment"
   type        = string
@@ -70,6 +87,6 @@ variable "data_vpc_state_dynamodb_table" {
 # variable "data_vpc_state_profile" {
 # }
 
-variable "eks_managed_node_groups" {
-  description = "EKS Managed Node Groups"
-}
+# variable "eks_managed_node_groups" {
+#   description = "EKS Managed Node Groups"
+# }
