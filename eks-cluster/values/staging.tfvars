@@ -1,5 +1,5 @@
 environment     = "staging"
-namespace       = "poc"
+namespace       = "staging"
 region          = "ap-south-1"
 aws_eks_cluster = "eks-stag-poc"
 //fargate_profiles = {}
