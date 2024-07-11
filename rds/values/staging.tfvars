@@ -3,12 +3,12 @@ cluster_identifier  = "poc-db-cluster"
 db_name             = "poc-stag-db"
 engine              = "postgres"
 storage_type        = "gp2"
-engine_version      = "13.12"
+engine_version      = "13.13"
 instance_class      = "db.t3.medium"
 username            = "postgres"
 password            = "qwertyuhgfde5dfw"
 # profile             = "default"
-publicly_accessible = false
+# publicly_accessible = true
 
 resource_tags = {
   "CreatedBy"      = "poc"

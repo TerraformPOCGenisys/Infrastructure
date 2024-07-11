@@ -9,7 +9,7 @@ resource "aws_db_instance" "default" {
   identifier = var.db_name
   username = var.username
   password = var.password
-  publicly_accessible  = var.publicly_accessible 
+  # publicly_accessible  = var.publicly_accessible 
   vpc_security_group_ids = [module.db_sg.security_group_id]
   db_subnet_group_name = aws_db_subnet_group.default.name
   skip_final_snapshot = true

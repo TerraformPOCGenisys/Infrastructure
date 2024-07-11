@@ -35,6 +35,7 @@ variable "db_name" {
   default = ""
 }
 variable "publicly_accessible" {
+  default = "false"
 
 }
 variable "engine_version" {
