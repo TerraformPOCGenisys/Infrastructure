@@ -13,7 +13,7 @@ resource_tags = {
   "Sensitivity" : "yes"
   "Managed By" = "Terraform"
 }
-deploy_application_on_fargate = false
+deploy_application_on_fargate = true
 
 # gitlab_user = "arn:aws:iam::xxxxxxxxxxxxxxxxxxx:user/gitlab-k8s-user"
 

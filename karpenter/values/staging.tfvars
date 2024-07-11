@@ -3,7 +3,7 @@ aws_region = "ap-south-1"
 # provisioner = "staging"
 # profile = "ogm-india"
 
-deploy_application_on_fargate = false         ######IMP : put the same value as it was inserted in eks-cluster values files
+deploy_application_on_fargate = true         ######IMP : put the same value as it was inserted in eks-cluster values files
 
 
 ######backend config for EKS cluster######
