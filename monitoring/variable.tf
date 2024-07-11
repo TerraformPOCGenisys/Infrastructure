@@ -29,9 +29,9 @@ variable "grafana_host_name" {
 variable "loki_version" {
   
 }
-variable "mimir_version" {
+# variable "mimir_version" {
   
-}
+# }
 variable "k8s_monitoring_version" {
   
 }

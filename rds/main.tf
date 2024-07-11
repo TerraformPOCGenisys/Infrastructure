@@ -16,6 +16,6 @@ resource "aws_db_instance" "default" {
 }
 resource "aws_db_subnet_group" "default" {
   name       = "${var.cluster_identifier}-subnet-group"
-  subnet_ids = data.terraform_remote_state.vpc_state.outputs.public_subnets #data.terraform_remote_state.vpc.outputs.db_subnets
+  subnet_ids = data.terraform_remote_state.vpc_state.outputs.private_subnets #data.terraform_remote_state.vpc.outputs.db_subnets
   tags       = merge(var.resource_tags, { "Name" : "${var.cluster_identifier}" })
 }

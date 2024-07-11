@@ -13,8 +13,8 @@ spec:
       labels:
         app: inflate
     spec:
-      nodeSelector:
-        intent: k8s-karpenter-nodepool
+      # nodeSelector:
+      #   intent: k8s-karpenter-nodepool
       terminationGracePeriodSeconds: 0
       containers:
         - name: inflate

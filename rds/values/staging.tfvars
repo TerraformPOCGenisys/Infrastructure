@@ -8,7 +8,7 @@ instance_class      = "db.t3.medium"
 username            = "postgres"
 password            = "qwertyuhgfde5dfw"
 # profile             = "default"
-publicly_accessible = true
+publicly_accessible = false
 
 resource_tags = {
   "CreatedBy"      = "poc"
