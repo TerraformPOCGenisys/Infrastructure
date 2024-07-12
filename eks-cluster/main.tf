@@ -10,7 +10,8 @@ module "eks" {
   eks_managed_node_group_defaults = {
     disk_size = 50
   }
-
+  create_node_security_group = false
+  create_cluster_security_group = false
   access_entries = {
     genisysteam = {
       kubernetes_group = []
