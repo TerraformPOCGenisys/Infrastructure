@@ -2,7 +2,7 @@
 # In "deployment-patch-access-role.yml" file, update Namespace name as you required
 # First create role & role bindings by executing below command
 kubectl apply -f deployment-patch-access-role-prod.yml
-
+kubectl apply -f k8s-dev-access-role.yaml
 # Now bind that EKS K8s User which name mentioned in above executed Role/RoleBiding file
 # Here, update ARN of IAM User in "--arn" & update cluster name
 # IMP update "--username" with User mentioned in above executed Role/RoleBiding file

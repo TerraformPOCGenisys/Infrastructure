@@ -18,18 +18,27 @@ on:
         description: 'K8s region'
         required: true
         type: string
+      access_role:
+        description: 'Access Role (admin or readonly)'
+        required: true
+        type: choice
+        options:
+          - admin
+          - readonly
 env:
   IAM_WORKDIR: iam-k8s-access
 
 jobs:
-  terraform_aws_vpc:
-    name: 'IAM Access to k8s'
+  terraform_admin_access_role:
+    name: 'IAM Admin Access to k8s'
     runs-on: ubuntu-latest
     container: genisysdockerhub/terraform
 
     defaults:
       run:
         shell: bash
+
+    if: ${{ github.event.inputs.access_role == 'admin' }}
 
     steps:
     - name: Checkout
@@ -47,4 +56,35 @@ jobs:
         aws eks update-kubeconfig --name  ${{ github.event.inputs.cluster_name }}  --region ${{ github.event.inputs.k8s_region }}
         kubectl apply -f k8s-acces-role.yaml
         eksctl create iamidentitymapping --cluster ${{ github.event.inputs.cluster_name }} --arn ${{ github.event.inputs.aws_iam_arn }} --username k8s-access-user
+      working-directory: ${{ env.IAM_WORKDIR }}
+
+
+
+  terraform_read_only_access_role:
+    name: 'IAM Read Only Access to k8s'
+    runs-on: ubuntu-latest
+    container: genisysdockerhub/terraform
+
+    defaults:
+      run:
+        shell: bash
+
+    if: ${{ github.event.inputs.access_role == 'readonly' }}
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+
+    - name: Running Script to Grant Access
+      run: |
+        aws eks update-kubeconfig --name  ${{ github.event.inputs.cluster_name }}  --region ${{ github.event.inputs.k8s_region }}
+        kubectl apply -f k8s-dev-access-role.yaml
+        eksctl create iamidentitymapping --cluster ${{ github.event.inputs.cluster_name }} --arn ${{ github.event.inputs.aws_iam_arn }} --username k8s-dev-access-user
       working-directory: ${{ env.IAM_WORKDIR }}
