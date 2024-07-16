@@ -1,10 +1,9 @@
 aws_eks_cluster  = "eks-stag-poc"
 aws_region = "ap-south-1"
-# provisioner = "staging"
-# profile = "ogm-india"
 
-deploy_application_on_fargate = true         ######IMP : put the same value as it was inserted in eks-cluster values files
 
+###IMP :put the same value as it was inserted in eks-cluster values files
+deploy_application_on_fargate = true     
 
 ######backend config for EKS cluster######
 data_cluster_state_bucket     = "terraformstatebucketcm"

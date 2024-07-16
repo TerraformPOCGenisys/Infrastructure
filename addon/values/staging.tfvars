@@ -1,5 +1,6 @@
 aws_eks_cluster = "eks-stag-poc"
 aws_region      = "ap-south-1"
+##the namespace in which your appliaction will be deployed
 namespace       = "staging"
 env             = "staging"
 # profile         = "default"

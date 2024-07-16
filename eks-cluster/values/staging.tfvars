@@ -1,9 +1,13 @@
 environment     = "staging"
+
+##the namespace in which your appliaction will be deployed
 namespace       = "staging"
+
 region          = "ap-south-1"
+
+#the name of the eks cluster
 aws_eks_cluster = "eks-stag-poc"
-//fargate_profiles = {}
-# profile = "default"
+#Add the same terraform user through which ci/cd is executing so that that terraform user is ble to create cluster and deploy the resources in terraform.
 user    = "arn:aws:iam::352730764496:user/terraform-user"
 resource_tags = {
   "Created By" : "Genisys-POC"
@@ -15,19 +19,17 @@ resource_tags = {
 }
 deploy_application_on_fargate = true
 
-# gitlab_user = "arn:aws:iam::xxxxxxxxxxxxxxxxxxx:user/gitlab-k8s-user"
+
 
 ####data-remote-state-variable-values
-
 data_vpc_state_bucket         = "terraformstatebucketcm"
 data_vpc_state_key            = "vpc/terraform.state"
 data_vpc_state_region         = "ap-south-1"
 data_vpc_state_dynamodb_table = "terraformstatebucketcm"
 data_vpc_state_profile        = "default"
 
-
-
 ##################################EC2#################
+#this nodegroup will be created for each and every environemtn,the purpose od this nodegroup is to deploy monitoring stack in it.
 eks_managed_node_groups = {
   tools = {
     name         = "poc-node-group"
@@ -45,27 +47,3 @@ eks_managed_node_groups = {
 }
 
 
-
-############################Fargate#################
-
-
-# {
-#     k8s-fargate-profile = {
-#       name = "coredns"
-#       selectors = [
-#         {
-#           namespace = "kube-system"
-#         },
-#         {
-#           namespace = "default"
-#         },
-#         {
-#           namespace = "${var.namespace}"
-#         },
-#         {
-#           namespace = "*"
-#         }
-#       ]
-#       subnet_ids = flatten([data.terraform_remote_state.vpc_state.outputs.private_subnets])
-#     }
-#   }

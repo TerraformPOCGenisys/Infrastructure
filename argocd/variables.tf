@@ -10,7 +10,9 @@ variable "env" {
 
   default = ""
 }
-
+variable "ingress_cidrs_sg" {
+  
+}
 variable "alb_ingress_class" {
   default = ""
 }

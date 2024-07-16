@@ -53,7 +53,7 @@ resource "kubernetes_ingress_v1" "argocd-ingress" {
 
     annotations = {
       "alb.ingress.kubernetes.io/certificate-arn"          = var.acm_certificate
-      "alb.ingress.kubernetes.io/group.name"               = var.eks_cluster_name
+      "alb.ingress.kubernetes.io/group.name"               = "${var.eks_cluster_name}"
       "alb.ingress.kubernetes.io/healthcheck-port"         = "traffic-port"
       "alb.ingress.kubernetes.io/listen-ports"             = "[{\"HTTP\": 80}, {\"HTTPS\": 443}]"
       "alb.ingress.kubernetes.io/load-balancer-attributes" = "routing.http2.enabled=true"
@@ -62,6 +62,7 @@ resource "kubernetes_ingress_v1" "argocd-ingress" {
       "alb.ingress.kubernetes.io/success-codes"            = "200,302,301,404"
       "alb.ingress.kubernetes.io/target-type"              = "ip"
       "kubernetes.io/ingress.class"                        = var.alb_ingress_class
+      "alb.ingress.kubernetes.io/security-groups"          = "${aws_security_group.ingress.id},${data.terraform_remote_state.cluster.outputs.cluster_primary_security_group_id}"
 
     }
   }
