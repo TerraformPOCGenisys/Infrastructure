@@ -28,22 +28,7 @@ data_vpc_state_region         = "ap-south-1"
 data_vpc_state_dynamodb_table = "terraformstatebucketcm"
 data_vpc_state_profile        = "default"
 
-##################################EC2#################
-#this nodegroup will be created for each and every environemtn,the purpose od this nodegroup is to deploy monitoring stack in it.
-eks_managed_node_groups = {
-  tools = {
-    name         = "poc-node-group"
-    min_size     = 1
-    max_size     = 5
-    desired_size = 3
 
-    instance_types = ["t3.xlarge"]
-    capacity_type  = "ON_DEMAND"
 
-    update_config = {
-      max_unavailable_percentage = 50 # or set `max_unavailable`
-    }
-  }
-}
 
 
