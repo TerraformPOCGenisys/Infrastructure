@@ -28,32 +28,32 @@ http://mimir-nginx.monitoring.svc:80/prometheus
     - **JSON editor:**
         - Paste or manually enter the JSON policy.
 
-{  
-    "Version": "2012-10-17",  
-    "Statement": \[  
-        {  
-            "Sid": "Statement1",  
-            "Effect": "Allow",  
-            "Action": \[  
-                "ecr:\*",  
-                "rds:\*",  
-                "eks:\*",  
-                "s3:\*",  
-                "dynamodb:\*",  
-                "iam:\*",  
-                "ec2:\*",  
-                "cloudwatch:\*",  
-                "logs:\*",  
-                "kms:\*"  
-            \],  
-            "Resource": \[  
-                "\*"  
-            \]  
-        }  
-    \]  
-}
+            {  
+                "Version": "2012-10-17",  
+                "Statement": \[  
+                    {  
+                        "Sid": "Statement1",  
+                        "Effect": "Allow",  
+                        "Action": \[  
+                            "ecr:\*",  
+                            "rds:\*",  
+                            "eks:\*",  
+                            "s3:\*",  
+                            "dynamodb:\*",  
+                            "iam:\*",  
+                            "ec2:\*",  
+                            "cloudwatch:\*",  
+                            "logs:\*",  
+                            "kms:\*"  
+                        \],  
+                        "Resource": \[  
+                            "\*"  
+                        \]  
+                    }  
+                \]  
+            }
 
-1. **Review and Create:**
+7. **Review and Create:**
     - Review the policy details.
     - Give the policy a name and description (optional).
     - Click **Create policy**.
